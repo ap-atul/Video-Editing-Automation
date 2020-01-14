@@ -1,14 +1,6 @@
-# USAGE
-# python motion_detector.py
-# python motion_detector.py --video videos/example_01.mp4
-
-# import the necessary packages
-from imutils.video import VideoStream
-import argparse
 import datetime
-import imutils
-import time
 import cv2
+import imutils
 
 
 def display_contours(inputFile, threshold):

@@ -1,13 +1,9 @@
 import sys
 from PyQt4 import QtGui
+from PyQt4.uic.pyuic import *
 
-import cv2
-import imutils
-import numpy as np
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
-
+import motion
 import motion_detector
-from dialog import First
 
 
 class Window(QtGui.QMainWindow):
@@ -36,6 +32,12 @@ class Window(QtGui.QMainWindow):
         self.selectFileTextbox.resize(380, 27)
         self.selectFileTextbox.setPlaceholderText('File Path')
 
+        self.totalFramesLabel = QtGui.QLabel(self)
+        self.totalFramesLabel.move(20, 110)
+
+        self.videoFps = QtGui.QLabel(self)
+        self.videoFps.move(20, 125)
+
         btn = QtGui.QPushButton("Browse", self)
         btn.setStatusTip('Select the file to edit')
         btn.clicked.connect(self.browseFiles)
@@ -47,7 +49,7 @@ class Window(QtGui.QMainWindow):
                      "content and provide you the output files. ")
         tip1.setFont(QtGui.QFont('Courier', 10))
         tip1.resize(tip1.sizeHint())
-        tip1.move(20, 150)
+        tip1.move(20, 160)
 
         # destination file components
         outputDetailsFileLabel = QtGui.QLabel(self)
@@ -100,7 +102,7 @@ class Window(QtGui.QMainWindow):
         self.thresholdTextbox.setPlaceholderText('ex. 25')
 
         btnPlayContours = QtGui.QPushButton("Play Live", self)
-        btnPlayContours.setStatusTip('Click to create your files')
+        btnPlayContours.setStatusTip('Click to play your files with Motion Changes')
         btnPlayContours.clicked.connect(self.playContours)
         btnPlayContours.resize(120, 27)
         btnPlayContours.move(200, 520)
@@ -111,11 +113,13 @@ class Window(QtGui.QMainWindow):
         btnCalculate.resize(120, 27)
         btnCalculate.move(350, 520)
 
-        self.statusBar()
+        self.statusBar = QtGui.QStatusBar(self)
+        self.setStatusBar(self.statusBar)
 
     # All Custom Methods
     def browseFiles(self):
-        name = QtGui.QFileDialog.getOpenFileName(None, "Open File", "~", "Video Files (*.mp4 *.ogg *.wav *.m4a)")
+        name = QtGui.QFileDialog.getOpenFileName(None, "Open File", "~",
+                                                 "Video Files (*.mp4 *.flv *.avi *.mov *.mpg *.mxf *.webm)")
         self.selectFileTextbox.setText(str(name))
 
     def browseFolders(self):
@@ -124,6 +128,17 @@ class Window(QtGui.QMainWindow):
 
     def setProgress(self, value):
         self.progress.setValue(value)
+
+    def setStatusTipText(self, value):
+        self.statusBar.showMessage(value, 10)
+
+    def setTotalFramesLabel(self, value):
+        self.totalFramesLabel.setText("Total Frames :- " + str(value))
+        self.totalFramesLabel.resize(self.totalFramesLabel.sizeHint())
+
+    def setVideoFpsLabel(self, value):
+        self.videoFps.setText("Video FPS :- " + str(value))
+        self.videoFps.resize(self.videoFps.sizeHint())
 
     def playContours(self):
         threshold = self.thresholdTextbox.text()
@@ -141,100 +156,9 @@ class Window(QtGui.QMainWindow):
         outputFile = self.destinationFileTextbox.text()
 
         if threshold and inputFile and outputFile:
-            self.startProcessing(inputFile, outputFile, threshold)
+            motion.startProcessing(self, inputFile, outputFile, threshold)
         else:
             pass
-
-    def startProcessing(self, inputFile, outputFile, threshold):
-        myclip = cv2.VideoCapture(str(inputFile))
-
-        fps = myclip.get(cv2.CAP_PROP_FPS)
-        totalFrames = myclip.get(cv2.CAP_PROP_FRAME_COUNT)
-        print("TotalFrames ::", totalFrames)
-        print("Video FPS ::", fps)
-
-        self.readMotionFrames(myclip, fps, inputFile, outputFile, threshold, totalFrames)
-        myclip.release()
-        cv2.destroyAllWindows()
-
-    def readMotionFrames(self, myclip, fps, inputFile, outputFile, threshold, totalFrames):
-        firstFrame = None
-        bestFrames = []
-        count = 0
-        prev = None
-        threshold = float(threshold)
-        np.seterr(divide='ignore')
-
-        while True:
-            originalFrame = myclip.read()
-            frame = originalFrame[1]
-            # if the frame could not be grabbed, then we have reached the end
-            # of the video
-            if frame is None:
-                break
-
-            # resize the frame, convert it to grayscale, and blur it
-            frame = imutils.resize(frame, width=500)
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            gray = cv2.GaussianBlur(gray, (21, 21), 0)
-
-            # if the first frame is None, initialize it
-            if firstFrame is None:
-                firstFrame = gray
-                continue
-
-            frameDelta = cv2.absdiff(firstFrame, gray)
-            # 25 threshold value, 255 maxvalue
-            thresh = cv2.threshold(frameDelta, threshold, 255, cv2.THRESH_BINARY)[1]
-            # print(thresh.sum())
-
-            threshSum = thresh.sum()
-            changeValue = threshSum / threshSum
-
-            if prev is None:
-                prev = changeValue
-
-            if prev != changeValue:
-                bestFrames.append(count)
-                prev = changeValue
-
-            count = count + 1
-            self.progress.setValue(round((count / totalFrames) * 100))
-        self.createVideo(bestFrames, fps, inputFile, outputFile)
-
-    # cut a subclip
-    def createVideo(self, bestFrames, fps, inputFile, outputFile):
-        inputFile = str(inputFile)
-        outputFile = str(outputFile)
-        a = bestFrames
-        size = len(a)
-        count = 0
-
-        if size % 2 == 0:
-            for i in range(0, size, 2):
-                startTime = round(a[i] / fps)
-                endTime = round(a[i + 1] / fps)
-
-                print("SubClip No :: " + str(i / 2))
-                ffmpeg_extract_subclip(inputFile, startTime, endTime,
-                                       targetname=outputFile + "/" + str(count) + ".mp4")
-                count = count + 1
-
-        else:
-            a[size] = size + 1
-            for i in range(0, size, 2):
-                startTime = round(a[i] / fps)
-                endTime = round(a[i + 1] / fps)
-
-                print("SubClip No :: " + str(i / 2))
-                ffmpeg_extract_subclip(inputFile, startTime, endTime,
-                                       targetname=outputFile + "/" + str(count) + ".mp4")
-                count = count + 1
-
-        print("Video Created")
-        self.progress.setValue(100)
-        dialog = First(self)
-        dialog.show()
 
 
 def main():
