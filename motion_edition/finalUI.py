@@ -1,6 +1,5 @@
-import sys
 from PyQt4 import QtGui
-from PyQt4.uic.pyuic import *
+import sys
 
 import motion
 import motion_detector
@@ -13,7 +12,7 @@ class Window(QtGui.QMainWindow):
         self.setGeometry(100, 100, 500, 600)
         self.setFixedSize(500, 600)
         self.setWindowTitle("Video Editing Automation")
-        self.setWindowIcon(QtGui.QIcon('logo.png'))
+        self.setWindowIcon(QtGui.QIcon('icon.png'))
 
         # select file components
         inputDetailsFileLabel = QtGui.QLabel(self)
@@ -33,9 +32,11 @@ class Window(QtGui.QMainWindow):
         self.selectFileTextbox.setPlaceholderText('File Path')
 
         self.totalFramesLabel = QtGui.QLabel(self)
+        self.totalFramesLabel.setStyleSheet('color: red')
         self.totalFramesLabel.move(20, 110)
 
         self.videoFps = QtGui.QLabel(self)
+        self.videoFps.setStyleSheet('color: red')
         self.videoFps.move(20, 125)
 
         btn = QtGui.QPushButton("Browse", self)
@@ -67,6 +68,10 @@ class Window(QtGui.QMainWindow):
         self.destinationFileTextbox.move(20, 290)
         self.destinationFileTextbox.resize(380, 27)
         self.destinationFileTextbox.setPlaceholderText('Folder Path')
+
+        self.videoPercentCut = QtGui.QLabel(self)
+        self.videoPercentCut.setStyleSheet('color: red')
+        self.videoPercentCut.move(20, 320)
 
         btnDest = QtGui.QPushButton("Browse", self)
         btnDest.setStatusTip('Select the folder to store')
@@ -139,6 +144,10 @@ class Window(QtGui.QMainWindow):
     def setVideoFpsLabel(self, value):
         self.videoFps.setText("Video FPS :- " + str(value))
         self.videoFps.resize(self.videoFps.sizeHint())
+
+    def setVideoPercentCuts(self, value):
+        self.videoPercentCut.setText("Percentage of video cut out :- " + str(value) + "%")
+        self.videoPercentCut.resize(self.videoPercentCut.sizeHint())
 
     def playContours(self):
         threshold = self.thresholdTextbox.text()

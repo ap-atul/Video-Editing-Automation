@@ -9,7 +9,7 @@ class First(QtGui.QMainWindow):
         self.setGeometry(100, 100, 500, 100)
         self.setFixedSize(500, 100)
         self.setWindowTitle("Video Status")
-        self.setWindowIcon(QtGui.QIcon('logo.png'))
+        self.setWindowIcon(QtGui.QIcon('icon.png'))
 
         label = QtGui.QLabel(self)
         label.setText("Your video is processed successfully!")

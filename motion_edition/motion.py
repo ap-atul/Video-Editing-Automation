@@ -26,6 +26,7 @@ def startProcessing(Window, inputFile, outputFile, threshold):
 def readMotionFrames(Window, myClip, fps, inputFile, outputFile, threshold, totalFrames):
     firstFrame = None
     bestFrames = []
+    bestCounts = []
     count = 0
     prev = None
     threshold = float(threshold)
@@ -59,6 +60,9 @@ def readMotionFrames(Window, myClip, fps, inputFile, outputFile, threshold, tota
         threshSum = thresh.sum()
         changeValue = threshSum / threshSum
 
+        if threshSum != 0:
+            bestCounts.append(count)
+
         if prev is None:
             prev = changeValue
 
@@ -68,18 +72,17 @@ def readMotionFrames(Window, myClip, fps, inputFile, outputFile, threshold, tota
 
         count = count + 1
         Window.setProgress(round((count / totalFrames) * 100))
-    createVideo(Window, bestFrames, fps, inputFile, outputFile)
+    createVideo(Window, bestFrames, fps, inputFile, outputFile, totalFrames, bestCounts)
 
 
 # cut a sub clip
-def createVideo(window, bestFrames, fps, inputFile, outputFile):
+def createVideo(window, bestFrames, fps, inputFile, outputFile, totalFrames, bestCounts):
     window.setStatusTipText("Creating the videos.....")
     inputFile = str(inputFile)
     outputFile = str(outputFile)
     a = bestFrames
     size = len(a)
     count = 0
-    print(size)
 
     if size != 0 and size != 1:
         if size % 2 == 0:
@@ -104,6 +107,8 @@ def createVideo(window, bestFrames, fps, inputFile, outputFile):
                 count = count + 1
 
     print("Video Created")
+    per = (len(bestCounts) / totalFrames) * 100
+    window.setVideoPercentCuts(round(per))
     window.progress.setValue(100)
     dialog = First(window)
     dialog.show()
