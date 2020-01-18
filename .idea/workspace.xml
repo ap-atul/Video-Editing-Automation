@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="73783692-033d-4e4b-87ae-dc1e0368482f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/combo_creator/combo.py" beforeDir="false" afterPath="$PROJECT_DIR$/combo_creator/combo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/combo_creator/creatComboUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/combo_creator/creatComboUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/motion_edition/dialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/motion_edition/dialog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/motion_edition/finalUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/motion_edition/finalUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/motion_edition/motion.py" beforeDir="false" afterPath="$PROJECT_DIR$/motion_edition/motion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/motion_edition/motion_detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/motion_edition/play_video.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1WZORzlGg3RXCX8MACsExahHR16" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager" selected="Python.finalUI">
+    <configuration name="creatComboUI" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Video-Editing-Automation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/combo_creator" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/combo_creator/creatComboUI.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="finalUI" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Video-Editing-Automation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/motion_edition" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/motion_edition/finalUI.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.finalUI" />
+        <item itemvalue="Python.creatComboUI" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="73783692-033d-4e4b-87ae-dc1e0368482f" name="Default Changelist" comment="" />
+      <created>1579353648363</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1579353648363</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1308" height="188" key="GridCell.Tab.0.bottom" timestamp="1579358391072">
+      <screen x="39" y="24" width="1327" height="744" />
+    </state>
+    <state width="1308" height="188" key="GridCell.Tab.0.bottom/39.24.1327.744@39.24.1327.744" timestamp="1579358391072" />
+    <state width="1308" height="188" key="GridCell.Tab.0.center" timestamp="1579358391071">
+      <screen x="39" y="24" width="1327" height="744" />
+    </state>
+    <state width="1308" height="188" key="GridCell.Tab.0.center/39.24.1327.744@39.24.1327.744" timestamp="1579358391071" />
+    <state width="1308" height="188" key="GridCell.Tab.0.left" timestamp="1579358391070">
+      <screen x="39" y="24" width="1327" height="744" />
+    </state>
+    <state width="1308" height="188" key="GridCell.Tab.0.left/39.24.1327.744@39.24.1327.744" timestamp="1579358391070" />
+    <state width="1308" height="188" key="GridCell.Tab.0.right" timestamp="1579358391071">
+      <screen x="39" y="24" width="1327" height="744" />
+    </state>
+    <state width="1308" height="188" key="GridCell.Tab.0.right/39.24.1327.744@39.24.1327.744" timestamp="1579358391071" />
+    <state x="315" y="117" key="SettingsEditor" timestamp="1579353711301">
+      <screen x="39" y="24" width="1327" height="744" />
+    </state>
+    <state x="315" y="117" key="SettingsEditor/39.24.1327.744@39.24.1327.744" timestamp="1579353711301" />
+    <state x="432" y="261" key="com.intellij.ide.util.TipDialog" timestamp="1579353660122">
+      <screen x="39" y="24" width="1327" height="744" />
+    </state>
+    <state x="432" y="261" key="com.intellij.ide.util.TipDialog/39.24.1327.744@39.24.1327.744" timestamp="1579353660122" />
+  </component>
+</project>

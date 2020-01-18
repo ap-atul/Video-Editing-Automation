@@ -2,8 +2,11 @@ from PyQt4 import QtGui
 import sys
 
 import motion
-import motion_detector
+import play_video
 
+
+# this application divides a video into segments when it finds motion specified by thresh value
+# it works with use of opecv to detect motion and uses ffmpeg to create an output file.
 
 class Window(QtGui.QMainWindow):
 
@@ -12,7 +15,7 @@ class Window(QtGui.QMainWindow):
         self.setGeometry(100, 100, 500, 600)
         self.setFixedSize(500, 600)
         self.setWindowTitle("Video Editing Automation")
-        self.setWindowIcon(QtGui.QIcon('icon.png'))
+        self.setWindowIcon(QtGui.QIcon('icon.png'))   # application window icon
 
         # select file components
         inputDetailsFileLabel = QtGui.QLabel(self)
@@ -122,43 +125,52 @@ class Window(QtGui.QMainWindow):
         self.setStatusBar(self.statusBar)
 
     # All Custom Methods
+    # select a input file
     def browseFiles(self):
         name = QtGui.QFileDialog.getOpenFileName(None, "Open File", "~",
                                                  "Video Files (*.mp4 *.flv *.avi *.mov *.mpg *.mxf *.webm)")
         self.selectFileTextbox.setText(str(name))
 
+    # select the output folder
     def browseFolders(self):
         name = QtGui.QFileDialog.getExistingDirectory(None, "Select Directory")
         self.destinationFileTextbox.setText(name)
 
+    # set progress to the progress bar
     def setProgress(self, value):
         self.progress.setValue(value)
 
+    # set status to the status bar
     def setStatusTipText(self, value):
         self.statusBar.showMessage(value, 10)
 
+    # set total number of frames on the window
     def setTotalFramesLabel(self, value):
         self.totalFramesLabel.setText("Total Frames :- " + str(value))
         self.totalFramesLabel.resize(self.totalFramesLabel.sizeHint())
 
+    # set video fps on the window
     def setVideoFpsLabel(self, value):
         self.videoFps.setText("Video FPS :- " + str(value))
         self.videoFps.resize(self.videoFps.sizeHint())
 
+    # set percentage of video output to the input on the window
     def setVideoPercentCuts(self, value):
         self.videoPercentCut.setText("Percentage of video cut out :- " + str(value) + "%")
         self.videoPercentCut.resize(self.videoPercentCut.sizeHint())
 
+    # play the video with motion algorithm applied
     def playContours(self):
         threshold = self.thresholdTextbox.text()
         inputFile = self.selectFileTextbox.text()
         outputFile = self.destinationFileTextbox.text()
 
         if threshold and inputFile and outputFile:
-            motion_detector.display_contours(inputFile, threshold)
+            play_video.display_contours(inputFile, threshold)
         else:
             pass
 
+    # process the video and create output files
     def callMotionDetection(self):
         threshold = self.thresholdTextbox.text()
         inputFile = self.selectFileTextbox.text()
