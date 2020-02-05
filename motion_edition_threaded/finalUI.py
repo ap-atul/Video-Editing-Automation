@@ -15,7 +15,7 @@ class Window(QtGui.QMainWindow):
         self.setGeometry(100, 100, 500, 600)
         self.setFixedSize(500, 600)
         self.setWindowTitle("Video Editing Automation")
-        self.setWindowIcon(QtGui.QIcon('icon.png'))   # application window icon
+        self.setWindowIcon(QtGui.QIcon('icon.png'))  # application window icon
 
         # select file components
         inputDetailsFileLabel = QtGui.QLabel(self)
@@ -128,7 +128,7 @@ class Window(QtGui.QMainWindow):
     # select a input file
     def browseFiles(self):
         name = QtGui.QFileDialog.getOpenFileName(None, "Open File", "~",
-                                                 "Video Files (*.mp4 *.flv *.avi *.mov *.mpg *.mxf *.webm)")
+                                                 "Video Files (*.mp4 *.flv *.avi *.mov *.mpg *.mxf)")
         self.selectFileTextbox.setText(str(name))
 
     # select the output folder

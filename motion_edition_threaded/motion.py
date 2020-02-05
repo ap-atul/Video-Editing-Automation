@@ -1,3 +1,4 @@
+from datetime import datetime
 import cv2
 import imutils
 import numpy as np
@@ -16,7 +17,7 @@ from VideoGet import VideoGet  # all thread implementation is in this class
 #           Window : QWindow object, ui window for set values
 #           inputFile : path of the input file
 #           outputFolder : path of the output folder
-#           threshold : an int value that represent the amount of motion to detect, values = 0 -> 255
+#           threshold : an float value that represent the amount of motion to detect, values = 0 -> 255
 
 def startProcessing(Window, inputFile, outputFolder, threshold):
     video_getter = VideoGet(str(inputFile)).start()
@@ -31,7 +32,9 @@ def startProcessing(Window, inputFile, outputFolder, threshold):
     Window.setTotalFramesLabel(totalFrames)
     Window.setVideoFpsLabel(fps)
 
+    # start_time = datetime.now()
     readMotionFrames(Window, video_getter, myClip, fps, inputFile, outputFolder, threshold, totalFrames)
+    # print((datetime.now() - start_time).total_seconds())
     myClip.release()
     cv2.destroyAllWindows()
 
@@ -39,9 +42,9 @@ def startProcessing(Window, inputFile, outputFolder, threshold):
 # reads the video and creates timestamps for interesting parts
 def readMotionFrames(Window, video_getter, myClip, fps, inputFile, outputFolder, threshold, totalFrames):
     firstFrame = None  # assuming the first frame as no motion
-    bestFrames = []   # stores the timestamps
+    bestFrames = []  # stores the timestamps
     prev = None
-    threshold = float(threshold)    # the threshold value
+    threshold = float(threshold)  # the threshold value
     np.seterr(divide='ignore')
 
     Window.setStatusTipText("Reading a total of " + str(totalFrames) + " frames....")
@@ -71,13 +74,13 @@ def readMotionFrames(Window, video_getter, myClip, fps, inputFile, outputFolder,
         # 25 threshold value, 255 maxvalue
         thresh = cv2.threshold(frameDelta, threshold, 255, cv2.THRESH_BINARY)[1]
 
-        threshSum = thresh.sum()     # sum of thresh image
+        threshSum = thresh.sum()  # sum of thresh image
         changeValue = threshSum / threshSum
 
-        if prev is None:    # start of motion
+        if prev is None:  # start of motion
             prev = changeValue
 
-        if prev != changeValue:     # end of motion
+        if prev != changeValue:  # end of motion
             bestFrames.append(myClip.get(cv2.CAP_PROP_POS_FRAMES))
             prev = changeValue
 
@@ -100,9 +103,6 @@ def createVideo(window, bestFrames, fps, inputFile, outputFolder, totalFrames):
                 startTime = round(bestFrames[i] / fps)
                 endTime = round(bestFrames[i + 1] / fps)
 
-                print("StartTime of :", startTime)
-                print("EndTime of :", endTime)
-
                 print("SubClip No :: " + str(i / 2))
                 ffmpeg_extract_subclip(inputFile, startTime, endTime,
                                        targetname=outputFolder + "/" + str(count) + ".mp4")
@@ -115,9 +115,6 @@ def createVideo(window, bestFrames, fps, inputFile, outputFolder, totalFrames):
                 startTime = round(bestFrames[i] / fps)
                 endTime = round(bestFrames[i + 1] / fps)
 
-                print("StartTime of :", startTime)
-                print("EndTime of 2:", endTime)
-
                 print("SubClip No :: " + str(i / 2))
                 ffmpeg_extract_subclip(inputFile, startTime, endTime,
                                        targetname=outputFolder + "/" + str(count) + ".mp4")
@@ -127,7 +124,7 @@ def createVideo(window, bestFrames, fps, inputFile, outputFolder, totalFrames):
         per = 100 - (((bestFrames[size - 2] - bestFrames[0]) / totalFrames) * 100)
         window.setVideoPercentCuts(round(per))
     else:
-	window.setVideoPercentCuts(0)
+        window.setVideoPercentCuts(0)
     window.progress.setValue(100)
 
     # display the completion dialog

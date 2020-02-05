@@ -5,6 +5,11 @@ import cv2
 class VideoShow:
 
     # Class that continuously shows a frame using a dedicated thread.
+    # Since it works in the thread other than the main UI Thread the
+    # video playback is faster and would be difficult to analyze.
+
+    # I haven't used it in the the video editing automation but it
+    # can be used for other purposes.
 
     def __init__(self, frame=None):
         self.frame = frame
