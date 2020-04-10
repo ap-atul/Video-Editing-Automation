@@ -20,8 +20,8 @@ class Window(QtGui.QMainWindow):
         # select file components
         inputDetailsFileLabel = QtGui.QLabel(self)
         inputDetailsFileLabel.setText("Input Details ")
-        inputDetailsFileLabel.setFont(QtGui.QFont('Arial', 25, QtGui.QFont.Bold))
-        inputDetailsFileLabel.resize(200, 27)
+        inputDetailsFileLabel.setFont(QtGui.QFont('Arial', 20, QtGui.QFont.Bold))
+        inputDetailsFileLabel.resize(200, 25)
         inputDetailsFileLabel.move(20, 10)
 
         self.selectFileLabel = QtGui.QLabel(self)
@@ -49,17 +49,17 @@ class Window(QtGui.QMainWindow):
         btn.move(400, 80)
 
         tip1 = QtGui.QLabel(self)
-        tip1.setText("Tip : Select a video of your favourite formats, we will make sure \nthat we find best motion "
-                     "content and provide you the output files. ")
+        tip1.setText("Tip : Select a video of your favourite formats, we will \n make sure that we find best motion "
+                     "content \n and provide you the output files. ")
         tip1.setFont(QtGui.QFont('Courier', 10))
         tip1.resize(tip1.sizeHint())
-        tip1.move(20, 160)
+        tip1.move(20, 150)
 
         # destination file components
         outputDetailsFileLabel = QtGui.QLabel(self)
         outputDetailsFileLabel.setText("Output Details ")
-        outputDetailsFileLabel.setFont(QtGui.QFont('Arial', 25, QtGui.QFont.Bold))
-        outputDetailsFileLabel.resize(200, 27)
+        outputDetailsFileLabel.setFont(QtGui.QFont('Arial', 20, QtGui.QFont.Bold))
+        outputDetailsFileLabel.resize(200, 25)
         outputDetailsFileLabel.move(20, 210)
 
         self.destinationFileLabel = QtGui.QLabel(self)
@@ -83,17 +83,17 @@ class Window(QtGui.QMainWindow):
         btnDestination.move(400, 290)
 
         tip1 = QtGui.QLabel(self)
-        tip1.setText("Tip : We will create number of clips where, we find best motion \n"
+        tip1.setText("Tip : We will create number of clips where, we find best \n motion "
                      "content and provide you the output files. ")
         tip1.setFont(QtGui.QFont('Courier', 10))
         tip1.resize(tip1.sizeHint())
-        tip1.move(20, 360)
+        tip1.move(20, 340)
 
         # status components && variables
         outputDetailsFileLabel = QtGui.QLabel(self)
         outputDetailsFileLabel.setText("Options & Status")
-        outputDetailsFileLabel.setFont(QtGui.QFont('Arial', 25, QtGui.QFont.Bold))
-        outputDetailsFileLabel.resize(250, 27)
+        outputDetailsFileLabel.setFont(QtGui.QFont('Arial', 20, QtGui.QFont.Bold))
+        outputDetailsFileLabel.resize(250, 25)
         outputDetailsFileLabel.move(20, 410)
 
         self.progress = QtGui.QProgressBar(self)

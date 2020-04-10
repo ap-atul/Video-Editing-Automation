@@ -16,7 +16,7 @@ class VideoShow:
         self.stopped = False
 
     def start(self):
-        Thread(target=self.show, args=()).start()   # creating a thread
+        Thread(target=self.show, args=()).start()  # creating a thread
         return self
 
     def show(self):

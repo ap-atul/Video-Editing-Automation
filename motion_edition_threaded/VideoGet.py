@@ -14,7 +14,7 @@ class VideoGet:
         self.stopped = False
 
     def start(self):
-        Thread(target=self.get, args=()).start()    # creating a thread
+        Thread(target=self.get, args=()).start()  # creating a thread
         return self
 
     def get(self):
