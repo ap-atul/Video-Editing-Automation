@@ -35,6 +35,10 @@ Storing the video to the file directory specified. Since only the processing of 
 
 In the threaded version, the video frame reading is done in the thread in the VideoGet file which improves reading by *2 the normal way.
 
+## Screens
+
+![app](https://raw.githubusercontent.com/AP-Atul/Video-Editing-Automation/master/screens/appworking.png "App UI")
+![app](https://github.com/AP-Atul/Video-Editing-Automation/blob/master/screens/workingallframes.png?raw=true "App Real-time Working")
 
 ## Help
 If any problem occurs, regarding the code or libraries, you may raise an issue on GitHub. Thank You!
