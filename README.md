@@ -1,6 +1,8 @@
 # Video-Editing-Automation
 A Python-based Video Editing Automation with Motion Detection using OpenCV and FFMPEG (MoviePy)
 
+- Working on different approach to automate Video Editing. Repo will be public soon 😉
+
 ## Directories
 Every directory in the repository is a standalone product no directory is related to each other, there are same files though, but they need it to function correctly.
 
