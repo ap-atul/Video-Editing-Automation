@@ -46,3 +46,8 @@ In the threaded version, the video frame reading is done in the thread in the Vi
 
 ## Help
 If any problem occurs, regarding the code or libraries, you may raise an issue on GitHub. Thank You!
+
+## Known Issues
+Video is read by the Thread, which continuously read video frames, but sometimes, the motion detection calculation is slower than the speed of reading, so some frames get skipped. Solution to this is to create a Queue and store the frame, and read from the Queue.
+
+Why Queue? queue is python is thread safe.
