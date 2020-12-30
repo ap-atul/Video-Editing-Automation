@@ -3,15 +3,14 @@ adds a dialog to show the completion of the process
 if anything goes wrong no dialog is displayed
 """
 from PyQt5.QtGui import QIcon, QFont
-from PyQt5.QtWidgets import QLabel, QPushButton, QApplication
+from PyQt5.QtWidgets import QLabel, QPushButton
 
-import sys
 from PyQt5.QtWidgets import QMainWindow
 
 
-class First(QMainWindow):
+class Complete(QMainWindow):
     def __init__(self, parent=None):
-        super(First, self).__init__(parent)
+        super(Complete, self).__init__(parent)
 
         self.setGeometry(100, 100, 500, 100)
         self.setFixedSize(500, 100)
@@ -30,14 +29,3 @@ class First(QMainWindow):
 
     def closeDialog(self):
         self.close()
-
-
-def main():
-    app = QApplication(sys.argv)
-    window = First()
-    window.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()

@@ -3,9 +3,9 @@ this application divides a video into segments when it finds motion specified by
 it works with use of OPENCV to detect motion and uses FFMPEG to create an output file.
 """
 
-from PyQt5 import QtGui
 import sys
 
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import (QMainWindow, QLabel, QLineEdit, QPushButton,
                              QProgressBar, QStatusBar, QFileDialog, QApplication)
 

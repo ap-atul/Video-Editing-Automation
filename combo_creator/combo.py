@@ -1,17 +1,19 @@
 import glob
+
 import cv2
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 
-# find all video files and combine it into one file
-# params:
-#       ComboWindow : UI for the application, object of QWindow class
-#       inputFolder : input files folder path
-#       outputFile : path to store the video file created
-#
-# output : Outputs a single video file with file name provided at the location given
-
 def createCombo(ComboWindow, inputFolder, outputFile):
+    """
+    find all video files and combine it into one file
+    params:
+      ComboWindow : UI for the application, object of QWindow class
+      inputFolder : input files folder path
+      outputFile : path to store the video file created
+
+    output : Outputs a single video file with file name provided at the location given
+    """
     input_files = []  # array to store names of input files
     clip = []  # to store the combination of above files
 
@@ -19,7 +21,7 @@ def createCombo(ComboWindow, inputFolder, outputFile):
     inputFolder = str(inputFolder)
     outputFile = str(outputFile)
 
-    ComboWindow.setComboStatusTipText('Creating Video.......')   # setting status on the ui
+    ComboWindow.setComboStatusTipText('Creating Video.......')  # setting status on the ui
 
     # retrieving file names
     for fileInput in glob.glob(inputFolder + '/*.' + "mp4"):

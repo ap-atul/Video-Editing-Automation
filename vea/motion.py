@@ -5,9 +5,8 @@ import imutils
 import numpy as np
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 
-from vea.dialog import First
-from vea.tools.timestamps import get_timestamps
-from vea.tools.video_get import VideoGet
+from vea.dialog import Complete
+from vea.tools import VideoGet, get_timestamps
 
 
 class Motion:
@@ -133,5 +132,5 @@ class Motion:
         self.__controller.progress.setValue(100)
 
         # display the completion dialog
-        dialog = First(self.__controller)
+        dialog = Complete(self.__controller)
         dialog.show()
