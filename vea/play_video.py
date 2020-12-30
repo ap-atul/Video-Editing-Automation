@@ -9,15 +9,14 @@ import imutils
 #  In short this file detects frames with motion and display it to the user
 #  the video can be exited by pressing 'q'
 
-
 def display_contours(inputFile, threshold):
     inputFile = str(inputFile)
     threshold = float(threshold)
-    text = "Unoccupied"
 
-    # initialize the first frame in the video stream
+    # initialize the first frame in the video __stream
     vs = cv2.VideoCapture(inputFile)
     firstFrame = None
+    text = "Unoccupied"
 
     # loop over the frames of the video
     while True:
@@ -38,6 +37,8 @@ def display_contours(inputFile, threshold):
         if firstFrame is None:
             firstFrame = gray
             continue
+        else:
+            firstFrame = gray
 
         # compute the absolute difference between the current frame and
         # first frame

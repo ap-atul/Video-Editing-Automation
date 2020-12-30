@@ -1,27 +1,30 @@
-from PyQt4 import QtGui
+"""
+adds a dialog to show the completion of the process
+if anything goes wrong no dialog is displayed
+"""
+from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtWidgets import QLabel, QPushButton, QApplication
+
 import sys
+from PyQt5.QtWidgets import QMainWindow
 
 
-# add a dialog to show the completion of the process
-# if anything goes wrong no dialog is displayed
-
-
-class First(QtGui.QMainWindow):
+class First(QMainWindow):
     def __init__(self, parent=None):
         super(First, self).__init__(parent)
 
         self.setGeometry(100, 100, 500, 100)
         self.setFixedSize(500, 100)
         self.setWindowTitle("Video Status")
-        self.setWindowIcon(QtGui.QIcon('icon.png'))    # application window icon
+        self.setWindowIcon(QIcon('./assets/icon.png'))  # application window icon
 
-        label = QtGui.QLabel(self)
+        label = QLabel(self)
         label.setText("Your video is processed successfully!")
-        label.setFont(QtGui.QFont('Arial', 15, QtGui.QFont.Black))
+        label.setFont(QFont('Arial', 15, QFont.Black))
         label.resize(label.sizeHint())
         label.move(100, 10)
 
-        button = QtGui.QPushButton("Ok", self)
+        button = QPushButton("Ok", self)
         button.move(180, 40)
         button.clicked.connect(self.closeDialog)
 
@@ -30,7 +33,7 @@ class First(QtGui.QMainWindow):
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = First()
     window.show()
     sys.exit(app.exec_())

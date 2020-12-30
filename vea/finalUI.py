@@ -1,139 +1,147 @@
-from PyQt4 import QtGui
+"""
+this application divides a video into segments when it finds motion specified by thresh value
+it works with use of OPENCV to detect motion and uses FFMPEG to create an output file.
+"""
+
+from PyQt5 import QtGui
 import sys
 
-import motion
-import play_video
+from PyQt5.QtWidgets import (QMainWindow, QLabel, QLineEdit, QPushButton,
+                             QProgressBar, QStatusBar, QFileDialog, QApplication)
+
+from vea import play_video
+from vea.motion import Motion
 
 
-# this application divides a video into segments when it finds motion specified by thresh value
-# it works with use of opecv to detect motion and uses ffmpeg to create an output file.
-
-class Window(QtGui.QMainWindow):
+class Window(QMainWindow):
 
     def __init__(self):
         super(Window, self).__init__()
+
+        self.motion = Motion()
+
         self.setGeometry(100, 100, 500, 600)
         self.setFixedSize(500, 600)
         self.setWindowTitle("Video Editing Automation")
-        self.setWindowIcon(QtGui.QIcon('icon.png'))   # application window icon
+        self.setWindowIcon(QtGui.QIcon('./assets/icon.png'))  # application window icon
 
         # select file components
-        inputDetailsFileLabel = QtGui.QLabel(self)
+        inputDetailsFileLabel = QLabel(self)
         inputDetailsFileLabel.setText("Input Details ")
-        inputDetailsFileLabel.setFont(QtGui.QFont('Arial', 25, QtGui.QFont.Bold))
-        inputDetailsFileLabel.resize(200, 27)
+        inputDetailsFileLabel.setFont(QtGui.QFont('Arial', 20, QtGui.QFont.Bold))
+        inputDetailsFileLabel.resize(200, 25)
         inputDetailsFileLabel.move(20, 10)
 
-        self.selectFileLabel = QtGui.QLabel(self)
+        self.selectFileLabel = QLabel(self)
         self.selectFileLabel.setText("Select the file to edit")
         self.selectFileLabel.resize(200, 27)
         self.selectFileLabel.move(20, 50)
 
-        self.selectFileTextbox = QtGui.QLineEdit(self)
+        self.selectFileTextbox = QLineEdit(self)
         self.selectFileTextbox.move(20, 80)
         self.selectFileTextbox.resize(380, 27)
         self.selectFileTextbox.setPlaceholderText('File Path')
 
-        self.totalFramesLabel = QtGui.QLabel(self)
+        self.totalFramesLabel = QLabel(self)
         self.totalFramesLabel.setStyleSheet('color: red')
         self.totalFramesLabel.move(20, 110)
 
-        self.videoFps = QtGui.QLabel(self)
+        self.videoFps = QLabel(self)
         self.videoFps.setStyleSheet('color: red')
         self.videoFps.move(20, 125)
 
-        btn = QtGui.QPushButton("Browse", self)
+        btn = QPushButton("Browse", self)
         btn.setStatusTip('Select the file to edit')
         btn.clicked.connect(self.browseFiles)
         btn.resize(btn.sizeHint())
         btn.move(400, 80)
 
-        tip1 = QtGui.QLabel(self)
-        tip1.setText("Tip : Select a video of your favourite formats, we will make sure \nthat we find best motion "
-                     "content and provide you the output files. ")
+        tip1 = QLabel(self)
+        tip1.setText("Tip : Select a video of your favourite formats, we will \n make sure that we find best motion "
+                     "content \n and provide you the output files. ")
         tip1.setFont(QtGui.QFont('Courier', 10))
         tip1.resize(tip1.sizeHint())
-        tip1.move(20, 160)
+        tip1.move(20, 150)
 
         # destination file components
-        outputDetailsFileLabel = QtGui.QLabel(self)
+        outputDetailsFileLabel = QLabel(self)
         outputDetailsFileLabel.setText("Output Details ")
-        outputDetailsFileLabel.setFont(QtGui.QFont('Arial', 25, QtGui.QFont.Bold))
-        outputDetailsFileLabel.resize(200, 27)
+        outputDetailsFileLabel.setFont(QtGui.QFont('Arial', 20, QtGui.QFont.Bold))
+        outputDetailsFileLabel.resize(200, 25)
         outputDetailsFileLabel.move(20, 210)
 
-        self.destinationFileLabel = QtGui.QLabel(self)
+        self.destinationFileLabel = QLabel(self)
         self.destinationFileLabel.setText("Select the destination folder")
         self.destinationFileLabel.resize(200, 27)
         self.destinationFileLabel.move(20, 260)
 
-        self.destinationFileTextbox = QtGui.QLineEdit(self)
+        self.destinationFileTextbox = QLineEdit(self)
         self.destinationFileTextbox.move(20, 290)
         self.destinationFileTextbox.resize(380, 27)
         self.destinationFileTextbox.setPlaceholderText('Folder Path')
 
-        self.videoPercentCut = QtGui.QLabel(self)
+        self.videoPercentCut = QLabel(self)
         self.videoPercentCut.setStyleSheet('color: red')
         self.videoPercentCut.move(20, 320)
 
-        btnDest = QtGui.QPushButton("Browse", self)
-        btnDest.setStatusTip('Select the folder to store')
-        btnDest.clicked.connect(self.browseFolders)
-        btnDest.resize(btn.sizeHint())
-        btnDest.move(400, 290)
+        btnDestination = QPushButton("Browse", self)
+        btnDestination.setStatusTip('Select the folder to store')
+        btnDestination.clicked.connect(self.browseFolders)
+        btnDestination.resize(btn.sizeHint())
+        btnDestination.move(400, 290)
 
-        tip1 = QtGui.QLabel(self)
-        tip1.setText("Tip : We will create number of clips where, we find best motion \n"
+        tip1 = QLabel(self)
+        tip1.setText("Tip : We will create number of clips where, we find best \n motion "
                      "content and provide you the output files. ")
         tip1.setFont(QtGui.QFont('Courier', 10))
         tip1.resize(tip1.sizeHint())
-        tip1.move(20, 360)
+        tip1.move(20, 340)
 
         # status components && variables
-        outputDetailsFileLabel = QtGui.QLabel(self)
+        outputDetailsFileLabel = QLabel(self)
         outputDetailsFileLabel.setText("Options & Status")
-        outputDetailsFileLabel.setFont(QtGui.QFont('Arial', 25, QtGui.QFont.Bold))
-        outputDetailsFileLabel.resize(250, 27)
+        outputDetailsFileLabel.setFont(QtGui.QFont('Arial', 20, QtGui.QFont.Bold))
+        outputDetailsFileLabel.resize(250, 25)
         outputDetailsFileLabel.move(20, 410)
 
-        self.progress = QtGui.QProgressBar(self)
+        self.progress = QProgressBar(self)
         self.progress.setGeometry(20, 450, 460, 20)
 
-        destinationFileLabel = QtGui.QLabel(self)
+        destinationFileLabel = QLabel(self)
         destinationFileLabel.setText("Enter a Threshold Value")
         destinationFileLabel.resize(200, 27)
         destinationFileLabel.move(20, 500)
 
-        self.thresholdTextbox = QtGui.QLineEdit(self)
+        self.thresholdTextbox = QLineEdit(self)
         self.thresholdTextbox.move(20, 520)
         self.thresholdTextbox.resize(130, 27)
         self.thresholdTextbox.setPlaceholderText('ex. 25')
 
-        btnPlayContours = QtGui.QPushButton("Play Live", self)
-        btnPlayContours.setStatusTip('Click to play your files with Motion Changes')
-        btnPlayContours.clicked.connect(self.playContours)
-        btnPlayContours.resize(120, 27)
-        btnPlayContours.move(200, 520)
+        self.btnPlayContours = QPushButton("Play Live", self)
+        self.btnPlayContours.setStatusTip('Click to play your files with Motion Changes')
+        self.btnPlayContours.clicked.connect(self.playContours)
+        self.btnPlayContours.resize(120, 27)
+        self.btnPlayContours.move(200, 520)
 
-        btnCalculate = QtGui.QPushButton("Create", self)
-        btnCalculate.setStatusTip('Click to create your files')
-        btnCalculate.clicked.connect(self.callMotionDetection)
-        btnCalculate.resize(120, 27)
-        btnCalculate.move(350, 520)
+        self.btnCalculate = QPushButton("Create", self)
+        self.btnCalculate.setStatusTip('Click to create your files')
+        self.btnCalculate.clicked.connect(self.callMotionDetection)
+        self.btnCalculate.resize(120, 27)
+        self.btnCalculate.move(350, 520)
 
-        self.statusBar = QtGui.QStatusBar(self)
+        self.statusBar = QStatusBar(self)
         self.setStatusBar(self.statusBar)
 
     # All Custom Methods
     # select a input file
     def browseFiles(self):
-        name = QtGui.QFileDialog.getOpenFileName(None, "Open File", "~",
-                                                 "Video Files (*.mp4 *.flv *.avi *.mov *.mpg *.mxf *.webm)")
-        self.selectFileTextbox.setText(str(name))
+        name = QFileDialog.getOpenFileName(None, "Open File", "~",
+                                           "Video Files (*.mp4 *.flv *.avi *.mov *.mpg *.mxf)")
+        self.selectFileTextbox.setText(str(name[0]))
 
     # select the output folder
     def browseFolders(self):
-        name = QtGui.QFileDialog.getExistingDirectory(None, "Select Directory")
+        name = QFileDialog.getExistingDirectory(None, "Select Directory")
         self.destinationFileTextbox.setText(name)
 
     # set progress to the progress bar
@@ -161,29 +169,35 @@ class Window(QtGui.QMainWindow):
 
     # play the video with motion algorithm applied
     def playContours(self):
+        self.btnPlayContours.setEnabled(False)
         threshold = self.thresholdTextbox.text()
         inputFile = self.selectFileTextbox.text()
         outputFile = self.destinationFileTextbox.text()
 
         if threshold and inputFile and outputFile:
             play_video.display_contours(inputFile, threshold)
+            self.btnPlayContours.setEnabled(True)
         else:
-            pass
+            self.btnPlayContours.setEnabled(True)
 
     # process the video and create output files
     def callMotionDetection(self):
+        self.btnCalculate.setEnabled(False)
         threshold = self.thresholdTextbox.text()
         inputFile = self.selectFileTextbox.text()
         outputFile = self.destinationFileTextbox.text()
 
         if threshold and inputFile and outputFile:
-            motion.startProcessing(self, inputFile, outputFile, threshold)
+            self.motion.setThreshold(threshold)
+            self.motion.setHandler(self)
+            self.motion.startProcessing(inputFile, outputFile)
+            self.btnCalculate.setEnabled(True)
         else:
-            pass
+            self.btnCalculate.setEnabled(True)
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = Window()
     window.show()
     sys.exit(app.exec_())
