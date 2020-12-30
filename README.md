@@ -3,30 +3,17 @@ A Python-based Video Editing Automation with Motion Detection using OpenCV and F
 
 [Ref: PyImageSearch awesome blog post on Motion Detection](https://www.pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/)
 
-- Working on different approach to automate Video Editing. Repo will be public soon 😉
+- Working on different approach to automate Video Editing [check here](https://github.com/AP-Atul/Torpido)
 
 ## Directories
-Every directory in the repository is a standalone product no directory is related to each other, there are same files though, but they need it to function correctly.
+1. combo_creator: Creates a single video by combining multiple videos from a single folder
+2. vea: main directory that performs video editing based on motion activity.
 
-1. motion-edition: it has a UI(PyQt4) based python project, that processes the input video and creates a series of sub-clips containing motion that is detected with the motion detection algorithm written in OpenCV according to the threshold value. Also, this algorithm works on a single thread, so it is slow.
-
-2. motion-edition-threaded: an improved version of motion-edition, added multi-threading capabilities to improve video processing. In my observations, the processing speed has increased twice than the speed of the motion-edition.
-
-3. no_audio: this project, is similar to motion-edition, except creates a single output video file with the name 'outputFile.mp4', using only OpenCV, that too at runtime while processing the video. Since it uses OpenCV there is no audio processing.
-
-4. combo_creator: it is a tool for sub clips created in the motion-edition, which can be combined to create an output just like the no_audio, but this uses FFMPEG, hence has audio.
-
-
-## Required Libraries
-1. Make sure you have FFMPEG compiled/ installed in the development system.
-2. Python 2.7 is used, but it may or may not run on other versions.
-3. PYQt4 (for python 2.7) for UI to load up.
-4. OpenCV for python, to install, $ pip install python-opencv
-5. Movie py for python
-6. imutils for python, it may come installed with OpenCV
-
-## Executing the project
-Running the project is quite easy, just run the 'ui' named file in the directories, then an UIi will load and rest will work just fine.
+## Execution
+1. Install ffmpeg, required for video trimming
+2. Install all the requirements  
+``` $ pip3 install -r requirements.txt ```
+3. You are ready to roll.
 
 ## Basic working of the product
 The project starts by taking an input video file, reads it frame by frame and then resizes the frame to 500px width to reduce the processing, then making the image grayscale to add up more ease. 
@@ -37,7 +24,7 @@ Then using OpenCV's diff to calculate the difference between the frames and thre
 Store the startTime and endTime of the motion and then make cuts to the video starting from the startTime to the endTime using the FFMPEG tool.
 Storing the video to the file directory specified. Since only the processing of video is carried out, it is much faster.
 
-In the threaded version, the video frame reading is done in the thread in the VideoGet file which improves reading by *2 the normal way.
+The video reading is done in the thread in the VideoGet file which improves reading by *2 the normal way.
 
 ## Screens
 
@@ -46,8 +33,3 @@ In the threaded version, the video frame reading is done in the thread in the Vi
 
 ## Help
 If any problem occurs, regarding the code or libraries, you may raise an issue on GitHub. Thank You!
-
-## Known Issues
-Video is read by the Thread, which continuously read video frames, but sometimes, the motion detection calculation is slower than the speed of reading, so some frames get skipped. Solution to this is to create a Queue and store the frame, and read from the Queue.
-
-Why Queue? queue in python is thread safe. (from queue import Queue)
