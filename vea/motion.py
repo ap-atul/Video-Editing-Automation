@@ -6,6 +6,7 @@ import numpy as np
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 
 from vea.dialog import First
+from vea.tools.timestamps import get_timestamps
 from vea.tools.video_get import VideoGet
 
 
@@ -71,6 +72,7 @@ class Motion:
         firstFrame = None  # assuming the first frame as no motion
         bestFrames = []  # stores the timestamps
         prev = None
+        count = 0
         np.seterr(divide='ignore')
 
         self.__controller.setStatusTipText("Reading a total of " + str(self.__totalFrames) + " frames....")
@@ -97,21 +99,16 @@ class Motion:
             # 25 threshold value, 255 maxvalue
             thresh = cv2.threshold(frameDelta, self._threshold, 255, cv2.THRESH_BINARY)[1]
 
-            threshSum = thresh.sum()  # sum of thresh image
-            changeValue = threshSum / threshSum
+            threshSum = thresh.sum()
+            if threshSum > 0:
+                bestFrames.append(count)
+            else:
+                bestFrames.append(0)
 
-            if prev is None:  # start of motion
-                prev = changeValue
-
-            if prev != changeValue:  # end of motion
-                bestFrames.append(self.__stream.get(cv2.CAP_PROP_POS_FRAMES))
-                prev = changeValue
-
-            self.__controller.progress.setValue(
-                int(self.__stream.get(cv2.CAP_PROP_POS_FRAMES)) / self.__totalFrames * 90)
+            self.__controller.progress.setValue((count / self.__totalFrames) * 90)
+            count += 1
 
         self.createVideo(bestFrames)
-        print(bestFrames)
 
     def createVideo(self, bestFrames):
         """
@@ -120,38 +117,19 @@ class Motion:
         self.__controller.setStatusTipText("Creating the videos.....")
         inputFile = str(self._inputFile)
         outputFolder = str(self._outputFolder)
-        size = len(bestFrames)
         count = 0
 
-        # cases where video has motion till the end of the video
-        if size != 0 and size != 1:
-            if size % 2 == 0:
-                for i in range(0, size, 2):
-                    startTime = round(bestFrames[i] / self.__fps)
-                    endTime = round(bestFrames[i + 1] / self.__fps)
+        timestamps = get_timestamps(bestFrames)
 
-                    print("SubClip No :: " + str(i / 2))
-                    ffmpeg_extract_subclip(inputFile, startTime, endTime,
-                                           targetname=outputFolder + "/" + str(count) + ".mp4")
-                    count = count + 1
+        for startTime, endTime in timestamps:
+            startTime /= self.__fps
+            endTime /= self.__fps
 
-            else:
-                bestFrames.append(self.__totalFrames)
-                size = size + 1
-                for i in range(0, size, 2):
-                    startTime = round(bestFrames[i] / self.__fps)
-                    endTime = round(bestFrames[i + 1] / self.__fps)
+            print(f"SubClip No :: {count}")
+            ffmpeg_extract_subclip(inputFile, startTime, endTime,
+                                   targetname=outputFolder + "/" + str(count) + ".mp4")
+            count = count + 1
 
-                    print("SubClip No :: " + str(i / 2))
-                    ffmpeg_extract_subclip(inputFile, startTime, endTime,
-                                           targetname=outputFolder + "/" + str(count) + ".mp4")
-                    count = count + 1
-
-            print("Video Created")
-            per = 100 - (((bestFrames[size - 2] - bestFrames[0]) / self.__totalFrames) * 100)
-            self.__controller.setVideoPercentCuts(round(per))
-        else:
-            self.__controller.setVideoPercentCuts(0)
         self.__controller.progress.setValue(100)
 
         # display the completion dialog
