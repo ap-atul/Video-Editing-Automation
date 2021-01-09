@@ -29,6 +29,7 @@ def createCombo(ComboWindow, inputFolder, outputFile):
     input_files = sorted(input_files, key=str.lower)
     lenInputFiles = len(input_files)
 
+    i = 0
     # appending file names
     for i in range(0, lenInputFiles):
         per = float(i + 1) / float(lenInputFiles)
