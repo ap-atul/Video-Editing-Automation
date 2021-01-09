@@ -1,11 +1,11 @@
+import os
 from time import sleep
 
 import cv2
 import imutils
 import numpy as np
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 
-from vea.dialog import Complete
+from vea import pympeg
 from vea.tools import VideoGet, get_timestamps
 
 
@@ -30,6 +30,7 @@ class Motion:
         self.__controller = None
         self._inputFile = None
         self._outputFolder = None
+        self._output_video_file_name = None
         self._threshold = None
         self.__fps = None
         self.__totalFrames = 0
@@ -53,8 +54,8 @@ class Motion:
         print("Video FPS ::", self.__fps)
 
         # set labels on the application window
-        self.__controller.setTotalFramesLabel(self.__totalFrames)
-        self.__controller.setVideoFpsLabel(self.__fps)
+        self.__controller.set_total_frames(self.__totalFrames)
+        self.__controller.set_video_fps(self.__fps)
 
         # wait
         if not self.__video_getter.more():
@@ -74,7 +75,7 @@ class Motion:
         count = 0
         np.seterr(divide='ignore')
 
-        self.__controller.setStatusTipText("Reading a total of " + str(self.__totalFrames) + " frames....")
+        # self.__controller.setStatusTipText("Reading a total of " + str(self.__totalFrames) + " frames....")
 
         while self.__video_getter.more():
 
@@ -104,7 +105,7 @@ class Motion:
             else:
                 bestFrames.append(0)
 
-            self.__controller.progress.setValue((count / self.__totalFrames) * 90)
+            self.__controller.set_progress((count / self.__totalFrames) * 90)
             count += 1
 
         self.createVideo(bestFrames)
