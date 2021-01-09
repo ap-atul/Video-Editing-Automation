@@ -1,5 +1,7 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 
+from vea import play_video
+from vea.dialog import Complete
 from vea.motion import Motion
 
 
@@ -15,6 +17,7 @@ class Controller(QThread):
 
         self._videoFile = None
         self._outputFolder = None
+        self._dialog = None
 
     def set_input_file(self, inputFile):
         self._videoFile = inputFile
@@ -40,3 +43,10 @@ class Controller(QThread):
 
     def run(self) -> None:
         self._motion.startProcessing(self._videoFile, self._outputFolder)
+
+    def set_dialog(self):
+        self._dialog = Complete()
+        self._dialog.show()
+
+    def start_display(self, threshold):
+        play_video.display_contours(self._videoFile, threshold)

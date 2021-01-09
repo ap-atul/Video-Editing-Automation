@@ -9,8 +9,7 @@ from PyQt5 import QtGui
 from PyQt5.QtWidgets import (QMainWindow, QLabel, QLineEdit, QPushButton,
                              QProgressBar, QStatusBar, QFileDialog, QApplication)
 
-from vea import play_video
-from vea.motion import Motion
+from vea.controller import Controller
 
 
 class Window(QMainWindow):
@@ -18,7 +17,7 @@ class Window(QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
 
-        self.motion = Motion()
+        self._controller = Controller()
 
         self.setGeometry(100, 100, 500, 600)
         self.setFixedSize(500, 600)
@@ -131,6 +130,9 @@ class Window(QMainWindow):
 
         self.statusBar = QStatusBar(self)
         self.setStatusBar(self.statusBar)
+        self._controller.progress.connect(self.setProgress)
+        self._controller.fps.connect(self.setVideoFpsLabel)
+        self._controller.frames.connect(self.setTotalFramesLabel)
 
     # All Custom Methods
     # select a input file
@@ -175,7 +177,10 @@ class Window(QMainWindow):
         outputFile = self.destinationFileTextbox.text()
 
         if threshold and inputFile and outputFile:
-            play_video.display_contours(inputFile, threshold)
+            self._controller.set_threshold(threshold)
+            self._controller.set_input_file(inputFile)
+            self._controller.set_output_fol(outputFile)
+            self._controller.start_display(threshold)
             self.btnPlayContours.setEnabled(True)
         else:
             self.btnPlayContours.setEnabled(True)
@@ -188,9 +193,10 @@ class Window(QMainWindow):
         outputFile = self.destinationFileTextbox.text()
 
         if threshold and inputFile and outputFile:
-            self.motion.setThreshold(threshold)
-            self.motion.setHandler(self)
-            self.motion.startProcessing(inputFile, outputFile)
+            self._controller.set_threshold(threshold)
+            self._controller.set_input_file(inputFile)
+            self._controller.set_output_fol(outputFile)
+            self._controller.start_processing()
             self.btnCalculate.setEnabled(True)
         else:
             self.btnCalculate.setEnabled(True)

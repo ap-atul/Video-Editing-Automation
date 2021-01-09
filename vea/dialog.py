@@ -9,8 +9,8 @@ from PyQt5.QtWidgets import QMainWindow
 
 
 class Complete(QMainWindow):
-    def __init__(self, parent=None):
-        super(Complete, self).__init__(parent)
+    def __init__(self):
+        super().__init__()
 
         self.setGeometry(100, 100, 500, 100)
         self.setFixedSize(500, 100)

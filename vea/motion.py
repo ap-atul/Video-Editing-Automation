@@ -1,11 +1,12 @@
 import os
+from subprocess import Popen, PIPE, STDOUT
 from time import sleep
 
 import cv2
 import imutils
 import numpy as np
+import pympeg
 
-from vea import pympeg
 from vea.tools import VideoGet, get_timestamps
 
 
@@ -34,6 +35,7 @@ class Motion:
         self._threshold = None
         self.__fps = None
         self.__totalFrames = 0
+        self._motion = None
 
     def setHandler(self, app):
         self.__controller = app
@@ -63,6 +65,7 @@ class Motion:
             sleep(0.3)
 
         self.readMotionFrames()
+        self._frames_normalize()
         self.__video_getter.stop()
 
     def readMotionFrames(self):
@@ -70,7 +73,7 @@ class Motion:
         reads the video and creates timestamps for interesting parts
         """
         firstFrame = None  # assuming the first frame as no motion
-        bestFrames = []  # stores the timestamps
+        self._motion = []  # stores the timestamps
         prev = None
         count = 0
         np.seterr(divide='ignore')
@@ -101,37 +104,78 @@ class Motion:
 
             threshSum = thresh.sum()
             if threshSum > 0:
-                bestFrames.append(count)
+                self._motion.append(1)
             else:
-                bestFrames.append(0)
+                self._motion.append(0)
 
             self.__controller.set_progress((count / self.__totalFrames) * 90)
             count += 1
 
-        self.createVideo(bestFrames)
+    def _frames_normalize(self):
+        motion_normalize = []
 
-    def createVideo(self, bestFrames):
-        """
-        cut a sub clip, makes cuts around the interesting parts
-        """
-        self.__controller.setStatusTipText("Creating the videos.....")
-        inputFile = str(self._inputFile)
-        outputFolder = str(self._outputFolder)
-        count = 0
+        for i in range(0, int(self.__totalFrames), int(self.__fps)):
+            if len(self._motion) >= (i + int(self.__fps)):
+                motion_normalize.append(np.mean(self._motion[i: i + int(self.__fps)]))
+            else:
+                break
 
-        timestamps = get_timestamps(bestFrames)
+        print(f"Motion rank length {len(motion_normalize)} ")
+        self.createVideo(motion_normalize)
 
-        for startTime, endTime in timestamps:
-            startTime /= self.__fps
-            endTime /= self.__fps
+    def createVideo(self, motion_normalize):
+        self.build_command(motion_normalize)
+        self.__controller.set_progress(100)
 
-            print(f"SubClip No :: {count}")
-            ffmpeg_extract_subclip(inputFile, startTime, endTime,
-                                   targetname=outputFolder + "/" + str(count) + ".mp4")
-            count = count + 1
+        command = self.build_command(motion_normalize)
+        print(f"Generated command for the output :: %s" % command)
+        print("Making the output video .....")
 
-        self.__controller.progress.setValue(100)
+        process = Popen(args=command,
+                        shell=True,
+                        stdout=PIPE,
+                        stderr=STDOUT,
+                        universal_newlines=True)
+
+        out, err = process.communicate()
+        code = process.poll()
+
+        if code:
+            raise Exception("FFmpeg ran into an error :: %s" % out)
 
         # display the completion dialog
-        dialog = Complete(self.__controller)
-        dialog.show()
+        self.__controller.set_dialog()
+
+    def build_command(self, motion_normalize):
+        """
+        For this I've used my own ffmeg wrapper
+        https://github.com/AP-Atul/pympeg
+        """
+
+        timestamps = get_timestamps(motion_normalize)
+
+        _, _extension = os.path.splitext(self._inputFile)
+        in_file = pympeg.input(name=str(self._inputFile))
+
+        args = "split=%s" % len(timestamps)
+        outputs = list()
+
+        # making labels
+        for i in range(len(timestamps)):
+            outputs.append("split_%s" % str(i))
+
+        split = pympeg.arg(inputs=in_file, args=args, outputs=outputs)
+
+        # making trims
+        for i, times in enumerate(timestamps):
+            start, duration = times
+            trim_filter = (
+                split[i].filter(filter_name="trim",
+                                params={"start": start, "duration": duration})
+                    .setpts()
+            )
+
+            output_file = os.path.join(self._outputFolder, str("output_%s_%s" % (str(i), _extension)))
+            trim_filter.output(name=output_file)
+
+        return pympeg.command()

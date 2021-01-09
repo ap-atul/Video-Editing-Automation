@@ -2,3 +2,4 @@ numpy
 imutils
 PyQt5
 moviepy
+git+https://github.com/AP-Atul/pympeg
